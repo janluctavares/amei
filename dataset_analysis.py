@@ -3,10 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-
-
-data = pd.read_csv(".\habitacao-dataset.txt") #reads file 
-
+data = pd.read_csv(".\Dataset_AP_Comprar.txt") #reads file 
 
 data.head()
 data.keys()
@@ -63,54 +60,83 @@ resto = resto[resto["TITULO"]!="Casa"]
 resto = resto[resto["TITULO"]!="Sala"]
 print(resto)
 
-# Plotting value counts of 'TITULO' column
+# Plotando contagens por titulo
 plt.figure(figsize=(8, 6))
 data['TITULO'].value_counts().plot(kind='bar')
-plt.title('Distribution of TITULO')
+plt.title('Distribuição de tipos de imóvel')
 plt.xlabel('TITULO')
-plt.ylabel('Count')
+plt.ylabel('Contagem')
 plt.xticks(rotation=45)
 plt.show()
 
-# Plotting value counts of 'OFERTA' column
+
 plt.figure(figsize=(6, 4))
 data['OFERTA'].value_counts().plot(kind='bar')
-plt.title('Distribution of OFERTA')
+plt.title('Tipos de OFERTA')
 plt.xlabel('OFERTA')
-plt.ylabel('Count')
+plt.ylabel('Contagem')
 plt.show()
 
-# Summary statistics for 'VALORES' and 'VALORES_PROMO'
+# Resumo de estatísticas de Valores e Valores Promo
+pd.options.display.float_format = '{:,.0f}'.format
 print(data[['VALORES', 'VALORES_PROMO']].describe())
 
-# Plotting histogram of 'METRAGEM'
-plt.figure(figsize=(8, 6))
-plt.hist(data['METRAGEM'], bins=30, edgecolor='k',range=(data['METRAGEM'].quantile(0.015), data['METRAGEM'].quantile(0.95)))
-plt.title('Histogram of METRAGEM')
-plt.xlabel('METRAGEM')
-plt.ylabel('Frequency')
-plt.show()
+'''
 
-# Plotting histograms of 'QUARTO', 'GARAGEM', and 'BANHEIRO'
-plt.figure(figsize=(12, 4))
-plt.subplot(1, 3, 1)
-plt.hist(data['QUARTO'], bins=np.arange(7), edgecolor='k')
-plt.title('QUARTO')
-plt.xlabel('Number of Bedrooms')
-plt.ylabel('Frequency')
+# DEMORA DEMAIS PRA EXECUTAR
+# Ordenar 'VALORES' e 'VALORES_PROMO'
+sorted_data = data[['VALORES', 'VALORES_PROMO']].sort_values(by=['VALORES', 'VALORES_PROMO'])
 
-plt.subplot(1, 3, 2)
-plt.hist(data['GARAGEM'], bins=np.arange(6), edgecolor='k')
-plt.title('GARAGEM')
-plt.xlabel('Number of Garages')
-plt.ylabel('Frequency')
+sorted_data = sorted_data.iloc[0:1000]
 
-plt.subplot(1, 3, 3)
-plt.hist(data['BANHEIRO'], bins=np.arange(6), edgecolor='k')
-plt.title('BANHEIRO')
-plt.xlabel('Number of Bathrooms')
-plt.ylabel('Frequency')
+# Plot de 'VALORES' e 'VALORES_PROMO'
+plt.figure(figsize=(12, 6))
+
+plt.subplot(1, 2, 1)
+plt.bar(np.arange(len(sorted_data)), sorted_data['VALORES'], align='center', alpha=0.7)
+plt.xticks(np.arange(len(sorted_data)), sorted_data.index, rotation=45)
+plt.xlabel('Índice')
+plt.ylabel('VALORES')
+plt.title('VALORES ordenados')
+
+plt.subplot(1, 2, 2)
+plt.bar(np.arange(len(sorted_data)), sorted_data['VALORES_PROMO'], align='center', alpha=0.7)
+plt.xticks(np.arange(len(sorted_data)), sorted_data.index, rotation=45)
+plt.xlabel('Índice')
+plt.ylabel('VALORES_PROMO')
+plt.title('VALORES_PROMO ordenados')
 
 plt.tight_layout()
 plt.show()
+'''
 
+# Histograma de 'METRAGEM'
+plt.figure(figsize=(8, 6))
+plt.hist(data['METRAGEM'], bins=30, edgecolor='k',range=(data['METRAGEM'].quantile(0.015), data['METRAGEM'].quantile(0.95)))
+plt.title('Histogramas das "metragens"')
+plt.xlabel('METRAGEM')
+plt.ylabel('Frequência')
+plt.show()
+
+# Histogramas de 'QUARTO', 'GARAGEM' e 'BANHEIRO'
+plt.figure(figsize=(12, 4))
+plt.subplot(1, 3, 1)
+plt.hist(data['QUARTO'], bins=np.arange(7)-0.5, edgecolor='k')
+plt.title('QUARTO')
+plt.xlabel('Número de Quartos')
+plt.ylabel('Frequência')
+
+plt.subplot(1, 3, 2)
+plt.hist(data['GARAGEM'], bins=np.arange(6)-0.5, edgecolor='k')
+plt.title('GARAGEM')
+plt.xlabel('Número de garagens')
+plt.ylabel('Frequência')
+
+plt.subplot(1, 3, 3)
+plt.hist(data['BANHEIRO'], bins=np.arange(6)-0.5, edgecolor='k')
+plt.title('BANHEIRO')
+plt.xlabel('Número de Banheiros')
+plt.ylabel('Frequência')
+
+plt.tight_layout()
+plt.show()
